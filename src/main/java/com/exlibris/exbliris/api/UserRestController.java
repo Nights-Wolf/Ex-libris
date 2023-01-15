@@ -1,6 +1,7 @@
 package com.exlibris.exbliris.api;
 
-import com.exlibris.exbliris.models.User;
+import com.exlibris.exbliris.models.user.User;
+import com.exlibris.exbliris.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class UserRestController {
     }
 
     @PostMapping
-    private ResponseEntity<Object> addUser(User user) {
+    private ResponseEntity<Object> addUser(@RequestBody User user) {
         try {
             return userService.addUser(user);
         } catch (HttpClientErrorException e) {
@@ -62,9 +63,9 @@ public class UserRestController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<Object> editUser(@PathVariable("id") Long id) {
+    private ResponseEntity<Object> editUser(@PathVariable("id") Long id, @RequestBody User user) {
         try {
-            return userService.editUser(id);
+            return userService.editUser(id, user);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
@@ -76,7 +77,7 @@ public class UserRestController {
     }
 
     @DeleteMapping("/{id}")
-    private void deleteUser(@PathVariable("id") Long id) {
-        userService.deleteUser();
+    private ResponseEntity<Object> deleteUser(@PathVariable("id") Long id) {
+        return userService.deleteUser(id);
     }
 }

@@ -1,4 +1,4 @@
-package com.exlibris.exbliris.models;
+package com.exlibris.exbliris.models.user;
 
 import lombok.Getter;
 import lombok.Setter;
