@@ -1,6 +1,6 @@
 package com.exlibris.exbliris.servicesImpl;
 
-import com.exlibris.exbliris.DTO.UserDB;
+import com.exlibris.exbliris.DB.UserDB;
 import com.exlibris.exbliris.models.user.User;
 import com.exlibris.exbliris.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

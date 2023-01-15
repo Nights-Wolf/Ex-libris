@@ -1,4 +1,4 @@
-package com.exlibris.exbliris.DTO;
+package com.exlibris.exbliris.DB;
 
 import com.exlibris.exbliris.models.user.User;
 import org.junit.jupiter.api.Assertions;
