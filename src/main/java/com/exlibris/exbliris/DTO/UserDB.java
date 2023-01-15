@@ -1,6 +1,6 @@
 package com.exlibris.exbliris.DTO;
 
-import com.exlibris.exbliris.models.User;
+import com.exlibris.exbliris.models.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Repository
-public class UserDTO {
+public class UserDB {
 
     private List<User> userList = new ArrayList<>();
 
@@ -39,11 +39,13 @@ public class UserDTO {
     public ResponseEntity<Object> editUser(User user) {
         User editedUser = user;
 
-        return new ResponseEntity<>(editedUser, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    public void deleteUser(Long id) {
+    public ResponseEntity<Object> deleteUser(Long id) {
         Predicate<User> userToDelete = user -> user.getId() == id;
         userList.removeIf(userToDelete);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
