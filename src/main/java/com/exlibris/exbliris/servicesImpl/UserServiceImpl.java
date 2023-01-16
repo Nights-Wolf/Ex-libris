@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.HashMap;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,36 +23,86 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<Object> addUser(User user) {
-        return userDB.addUser(user);
+        try {
+            ResponseEntity<Object> checkIfUserExists = userDB.getUser(user.getId());
+            if (checkIfUserExists != null) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+            return userDB.addUser(user);
+        } catch (HttpClientErrorException e) {
+            HashMap error = new HashMap<>();
+            error.put("Message", e.getMessage());
+            error.put("Status", e.getStatusCode());
+            error.put("Cause", e.getCause());
+
+            return new ResponseEntity<>(error, e.getStatusCode());
+        }
     }
 
     @Override
     public ResponseEntity<Object> getUser(Long id) {
-        return userDB.getUser(id);
+        try {
+            return userDB.getUser(id);
+        } catch (HttpClientErrorException e) {
+            HashMap error = new HashMap<>();
+            error.put("Message", e.getMessage());
+            error.put("Status", e.getStatusCode());
+            error.put("Cause", e.getCause());
+
+            return new ResponseEntity<>(error, e.getStatusCode());
+        }
     }
 
     @Override
     public ResponseEntity<Object> getAllUsers() {
-        return userDB.getAllUsers();
+        try {
+            return userDB.getAllUsers();
+        } catch (HttpClientErrorException e) {
+            HashMap error = new HashMap<>();
+            error.put("Message", e.getMessage());
+            error.put("Status", e.getStatusCode());
+            error.put("Cause", e.getCause());
+
+            return new ResponseEntity<>(error, e.getStatusCode());
+        }
     }
 
     @Override
     public ResponseEntity<Object> editUser(Long id, User user) {
-        ResponseEntity<Object> getUser= userDB.getUser(id);
-        User userToEdit = (User) getUser.getBody();
+        try {
+            ResponseEntity<Object> getUser = userDB.getUser(id);
 
-        userToEdit.setUsername(user.getUsername());
-        userToEdit.setEmail(user.getEmail());
-        userToEdit.setName(user.getName());
-        userToEdit.setSurname(user.getSurname());
+            User userToEdit = (User) getUser.getBody();
 
-        userDB.addUser(userToEdit);
+            userToEdit.setUsername(user.getUsername());
+            userToEdit.setEmail(user.getEmail());
+            userToEdit.setName(user.getName());
+            userToEdit.setSurname(user.getSurname());
 
-        return new ResponseEntity<>(HttpStatus.OK);
+            userDB.addUser(userToEdit);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (HttpClientErrorException e) {
+            HashMap error = new HashMap<>();
+            error.put("Message", e.getMessage());
+            error.put("Status", e.getStatusCode());
+            error.put("Cause", e.getCause());
+
+            return new ResponseEntity<>(error, e.getStatusCode());
+        }
     }
 
     @Override
     public ResponseEntity<Object> deleteUser(Long id) {
-        return userDB.deleteUser(id);
+        try {
+            return userDB.deleteUser(id);
+        } catch (HttpClientErrorException e) {
+            HashMap error = new HashMap<>();
+            error.put("Message", e.getMessage());
+            error.put("Status", e.getStatusCode());
+            error.put("Cause", e.getCause());
+
+            return new ResponseEntity<>(error, e.getStatusCode());
+        }
     }
 }
