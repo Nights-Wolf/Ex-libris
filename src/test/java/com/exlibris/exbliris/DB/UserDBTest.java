@@ -1,12 +1,12 @@
-package com.exlibris.exbliris.DTO;
+package com.exlibris.exbliris.DB;
 
 import com.exlibris.exbliris.models.user.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 class UserDBTest {
 
-    @MockBean
+    @Mock
     private UserDB userDB;
 
     private User user = new User(1L, "NightsWolf", "123", "dawi@wp.pl", "Dawid", "Całkowksi");

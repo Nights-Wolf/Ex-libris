@@ -1,6 +1,7 @@
-package com.exlibris.exbliris.DTO;
+package com.exlibris.exbliris.DB;
 
 import com.exlibris.exbliris.models.user.User;
+import com.exlibris.exbliris.models.user.UserResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
@@ -19,13 +20,14 @@ public class UserDB {
         User createdUser = user;
         userList.add(createdUser);
 
-        return new ResponseEntity<>(createdUser, HttpStatus.OK);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
     public ResponseEntity<Object> getUser(Long id) {
         User user = userList.get(Math.toIntExact(id));
+        UserResponse userResponse = new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getName(), user.getSurname());
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     public ResponseEntity<Object> getAllUsers() {
