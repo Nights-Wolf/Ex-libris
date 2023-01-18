@@ -1,13 +1,16 @@
 package com.exlibris.exbliris.services;
 
 import com.exlibris.exbliris.models.user.User;
+import com.exlibris.exbliris.models.user.UserResponse;
 import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 public interface UserService {
 
-    ResponseEntity<Object> addUser(User user);
-    ResponseEntity<Object> getUser(Long id);
-    ResponseEntity<Object> getAllUsers();
-    ResponseEntity<Object> editUser(Long id, User user);
-    ResponseEntity<Object> deleteUser(Long id);
+    void addUser(User user);
+    UserResponse getUser(Long id);
+    List<User> getAllUsers();
+    void editUser(Long id, User user);
+    void deleteUser(Long id);
 }
