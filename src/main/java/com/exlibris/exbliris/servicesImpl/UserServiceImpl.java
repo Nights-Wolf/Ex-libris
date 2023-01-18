@@ -5,12 +5,8 @@ import com.exlibris.exbliris.models.user.User;
 import com.exlibris.exbliris.models.user.UserResponse;
 import com.exlibris.exbliris.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -24,8 +20,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUser(User user) {
-           userDAO.addUser(user);
+    public User addUser(User user) {
+          return userDAO.addUser(user);
     }
 
     @Override

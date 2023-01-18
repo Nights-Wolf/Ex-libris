@@ -16,8 +16,9 @@ public class UserDAO {
 
     private List<User> userList = new ArrayList<>();
 
-    public void addUser(User user) {
+    public User addUser(User user) {
         userList.add(user);
+        return user;
     }
 
     public UserResponse getUser(Long id) {

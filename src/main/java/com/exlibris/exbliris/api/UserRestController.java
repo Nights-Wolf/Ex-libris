@@ -26,7 +26,10 @@ public class UserRestController {
     @PostMapping
     private ResponseEntity<Object> addUser(@RequestBody User user) {
         try {
-            userService.addUser(user);
+            User createdUser = userService.addUser(user);
+            if (createdUser == null) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
@@ -42,6 +45,9 @@ public class UserRestController {
     private ResponseEntity<Object> getUser(@PathVariable("id") Long id) {
         try {
             UserResponse userResponse = userService.getUser(id);
+            if (userResponse == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<>(userResponse, HttpStatus.OK);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
