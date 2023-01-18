@@ -16,32 +16,30 @@ public class UserDAO {
 
     private List<User> userList = new ArrayList<>();
 
-    public ResponseEntity<Object> addUser(User user) {
+    public void addUser(User user) {
         userList.add(user);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Object> getUser(Long id) {
+    public UserResponse getUser(Long id) {
         List<User> userFromList = userList.stream()
                 .filter(users -> Objects.equals(users.getId(), id))
                 .toList();
         try {
             User user = userFromList.get(0);
             UserResponse userResponse = new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getName(), user.getSurname());
-            return new ResponseEntity<>(userResponse, HttpStatus.OK);
+            return userResponse;
         } catch (IndexOutOfBoundsException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return null;
         }
     }
 
-    public ResponseEntity<Object> getAllUsers() {
+    public List<User> getAllUsers() {
             List<User> getUserList = new ArrayList<>(userList);
 
-            return new ResponseEntity<>(getUserList, HttpStatus.OK);
+            return getUserList;
     }
 
-    public ResponseEntity<Object> editUser(User user) {
+    public void editUser(User user) {
         List<User> userFromList = userList.stream()
                 .filter(users -> users.getId() == user.getId())
                 .toList();
@@ -51,14 +49,10 @@ public class UserDAO {
         userList.removeIf(userToDelete);
 
         userList.add(editedUser);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    public ResponseEntity<Object> deleteUser(Long id) {
+    public void deleteUser(Long id) {
         Predicate<User> userToDelete = user -> user.getId() == id;
         userList.removeIf(userToDelete);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

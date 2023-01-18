@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(User user) {
-            return userDAO.addUser(user);
+           userDAO.addUser(user);
     }
 
     @Override
@@ -40,20 +40,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editUser(Long id, User user) {
-            ResponseEntity<Object> getUser = userDAO.getUser(id);
+            UserResponse getUser = userDAO.getUser(id);
 
-            User userToEdit = (User) getUser.getBody();
+            UserResponse userToEdit = getUser;
 
             userToEdit.setUsername(user.getUsername());
             userToEdit.setEmail(user.getEmail());
             userToEdit.setName(user.getName());
             userToEdit.setSurname(user.getSurname());
 
-            return userDAO.addUser(userToEdit);
+            userDAO.addUser(user);
     }
 
     @Override
     public void deleteUser(Long id) {
-            return userDAO.deleteUser(id);
+            userDAO.deleteUser(id);
     }
 }
