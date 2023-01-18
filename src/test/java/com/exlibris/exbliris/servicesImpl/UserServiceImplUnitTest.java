@@ -1,12 +1,11 @@
 package com.exlibris.exbliris.servicesImpl;
 
-import com.exlibris.exbliris.DB.UserDB;
+import com.exlibris.exbliris.DAO.UserDAO;
 import com.exlibris.exbliris.models.user.User;
 import com.exlibris.exbliris.models.user.UserResponse;
 import com.exlibris.exbliris.services.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -24,28 +23,28 @@ class UserServiceImplUnitTest {
     @Mock
     private UserService userService;
     @Mock
-    private UserDB userDB;
+    private UserDAO userDAO;
 
     private User user = new User(1L, "NightsWolf", "123", "dawi@wp.pl", "Dawid", "Całkowksi");
     private UserResponse userResponse = new UserResponse(1L, "NightsWolf", "dawi@wp.pl", "Dawid", "Całkowksi");
 
     @BeforeEach
     void setUp() {
-        userService = new UserServiceImpl(userDB);
+        userService = new UserServiceImpl(userDAO);
     }
 
     @Test
     void shouldAddUser() {
-        Mockito.when(userDB.addUser(user)).thenReturn(new ResponseEntity<>(user, HttpStatus.OK));
+        Mockito.when(userDAO.addUser(user)).thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
         ResponseEntity<Object> response = userService.addUser(user);
-        User responseUser = (User) response.getBody();
+        HttpStatus status = (HttpStatus) response.getStatusCode();
 
-        Assertions.assertEquals(user, responseUser);
+        Assertions.assertEquals(HttpStatus.CREATED, status);
     }
 
     @Test
     void shouldCheckIfUserExists() {
-        Mockito.when(userDB.getUser(user.getId())).thenReturn(new ResponseEntity<>(userResponse, HttpStatus.OK));
+        Mockito.when(userDAO.getUser(user.getId())).thenReturn(new ResponseEntity<>(userResponse, HttpStatus.OK));
 
         ResponseEntity<Object> response = userService.addUser(user);
         HttpStatus responseStatus = (HttpStatus) response.getStatusCode();
@@ -55,7 +54,7 @@ class UserServiceImplUnitTest {
 
     @Test
     void shouldGetUser() {
-        Mockito.when(userDB.getUser(user.getId())).thenReturn(new ResponseEntity<>(userResponse, HttpStatus.OK));
+        Mockito.when(userDAO.getUser(user.getId())).thenReturn(new ResponseEntity<>(userResponse, HttpStatus.OK));
         ResponseEntity<Object> response = userService.getUser(user.getId());
         UserResponse responseUser = (UserResponse) response.getBody();
 
@@ -64,7 +63,7 @@ class UserServiceImplUnitTest {
 
     @Test
     void shouldThrowUserNotFound() {
-        Mockito.when(userDB.getUser(user.getId())).thenReturn(null);
+        Mockito.when(userDAO.getUser(user.getId())).thenReturn(null);
 
         ResponseEntity<Object> response = userService.getUser(user.getId());
         HttpStatus responseStatus = (HttpStatus) response.getStatusCode();
@@ -77,7 +76,7 @@ class UserServiceImplUnitTest {
         List<UserResponse> userList = new ArrayList<>();
         userList.add(userResponse);
 
-        Mockito.when(userDB.getAllUsers()).thenReturn(new ResponseEntity<>(userList, HttpStatus.OK));
+        Mockito.when(userDAO.getAllUsers()).thenReturn(new ResponseEntity<>(userList, HttpStatus.OK));
         ResponseEntity<Object> response = userService.getAllUsers();
         List<User> responseUserList = (List<User>) response.getBody();
 
@@ -86,7 +85,7 @@ class UserServiceImplUnitTest {
 
     @Test
     void shouldThrowAnyUserNotFound() {
-        Mockito.when(userDB.getAllUsers()).thenReturn(null);
+        Mockito.when(userDAO.getAllUsers()).thenReturn(null);
 
         ResponseEntity<Object> response = userService.getAllUsers();
         HttpStatus responseStatus = (HttpStatus) response.getStatusCode();
@@ -98,8 +97,8 @@ class UserServiceImplUnitTest {
     void shouldEditUser() {
         User editedUser = new User(1L, "NightsWolf", "123", "dawi@wp.pl", "Dawid", "Całkowksi");
 
-        Mockito.when(userDB.getUser(user.getId())).thenReturn(new ResponseEntity<>(user, HttpStatus.OK));
-        Mockito.when(userDB.editUser(editedUser)).thenReturn(new ResponseEntity<>(editedUser, HttpStatus.OK));
+        Mockito.when(userDAO.getUser(user.getId())).thenReturn(new ResponseEntity<>(user, HttpStatus.OK));
+        Mockito.when(userDAO.editUser(editedUser)).thenReturn(new ResponseEntity<>(editedUser, HttpStatus.OK));
         ResponseEntity<Object> response = userService.editUser(user.getId(), editedUser);
         User responseUser = (User) response.getBody();
 
@@ -110,7 +109,7 @@ class UserServiceImplUnitTest {
     void shouldThrowUserToEditNotFound() {
         User editedUser = new User(1L, "NightsWolf", "123", "dawi@wp.pl", "Dawid", "Całkowksi");
 
-        Mockito.when(userDB.getUser(user.getId())).thenReturn(null);
+        Mockito.when(userDAO.getUser(user.getId())).thenReturn(null);
 
         ResponseEntity<Object> response = userService.editUser(user.getId(), editedUser);
         HttpStatus responseStatus = (HttpStatus) response.getStatusCode();
@@ -120,7 +119,7 @@ class UserServiceImplUnitTest {
 
     @Test
     void deleteUser() {
-        Mockito.when(userDB.deleteUser(user.getId())).thenReturn(new ResponseEntity<>(HttpStatus.NO_CONTENT));
+        Mockito.when(userDAO.deleteUser(user.getId())).thenReturn(new ResponseEntity<>(HttpStatus.NO_CONTENT));
 
         ResponseEntity<Object> response = userService.deleteUser(user.getId());
         HttpStatus responseStatus = (HttpStatus) response.getStatusCode();
@@ -130,7 +129,7 @@ class UserServiceImplUnitTest {
 
     @Test
     void shouldThrowUserToDeleteNotFound() {
-        Mockito.when(userDB.deleteUser(user.getId())).thenReturn(null);
+        Mockito.when(userDAO.deleteUser(user.getId())).thenReturn(null);
 
         ResponseEntity<Object> response = userService.deleteUser(user.getId());
         HttpStatus responseStatus = (HttpStatus) response.getStatusCode();
