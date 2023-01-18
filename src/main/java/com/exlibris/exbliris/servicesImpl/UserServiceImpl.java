@@ -1,6 +1,6 @@
 package com.exlibris.exbliris.servicesImpl;
 
-import com.exlibris.exbliris.DB.UserDB;
+import com.exlibris.exbliris.DAO.UserDAO;
 import com.exlibris.exbliris.models.user.User;
 import com.exlibris.exbliris.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,21 +14,17 @@ import java.util.HashMap;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserDB userDB;
+    private final UserDAO userDAO;
 
     @Autowired
-    public UserServiceImpl(UserDB userDB) {
-        this.userDB = userDB;
+    public UserServiceImpl(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
     @Override
     public ResponseEntity<Object> addUser(User user) {
         try {
-            ResponseEntity<Object> checkIfUserExists = userDB.getUser(user.getId());
-            if (checkIfUserExists != null) {
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
-            }
-            return userDB.addUser(user);
+            return userDAO.addUser(user);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
@@ -42,7 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<Object> getUser(Long id) {
         try {
-            return userDB.getUser(id);
+            return userDAO.getUser(id);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
@@ -56,7 +52,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<Object> getAllUsers() {
         try {
-            return userDB.getAllUsers();
+            return userDAO.getAllUsers();
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
@@ -70,7 +66,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<Object> editUser(Long id, User user) {
         try {
-            ResponseEntity<Object> getUser = userDB.getUser(id);
+            ResponseEntity<Object> getUser = userDAO.getUser(id);
 
             User userToEdit = (User) getUser.getBody();
 
@@ -79,7 +75,7 @@ public class UserServiceImpl implements UserService {
             userToEdit.setName(user.getName());
             userToEdit.setSurname(user.getSurname());
 
-            userDB.addUser(userToEdit);
+            userDAO.addUser(userToEdit);
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (HttpClientErrorException e) {
@@ -95,7 +91,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<Object> deleteUser(Long id) {
         try {
-            return userDB.deleteUser(id);
+            return userDAO.deleteUser(id);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
