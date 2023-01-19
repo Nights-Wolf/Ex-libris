@@ -1,13 +1,16 @@
 package com.exlibris.exbliris.api;
 
 import com.exlibris.exbliris.models.user.User;
+import com.exlibris.exbliris.models.user.UserResponse;
 import com.exlibris.exbliris.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/user")
@@ -23,7 +26,8 @@ public class UserRestController {
     @PostMapping
     private ResponseEntity<Object> addUser(@RequestBody User user) {
         try {
-            return userService.addUser(user);
+            userService.addUser(user);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
@@ -37,7 +41,11 @@ public class UserRestController {
     @GetMapping("/{id}")
     private ResponseEntity<Object> getUser(@PathVariable("id") Long id) {
         try {
-            return userService.getUser(id);
+            UserResponse userResponse = userService.getUser(id);
+            if (userResponse == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(userResponse, HttpStatus.OK);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
@@ -51,7 +59,8 @@ public class UserRestController {
     @GetMapping("/all")
     private ResponseEntity<Object> getAllUsers() {
         try {
-            return userService.getAllUsers();
+            List<User> userList = userService.getAllUsers();
+            return new ResponseEntity<>(userList, HttpStatus.OK);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
@@ -65,7 +74,8 @@ public class UserRestController {
     @PutMapping("/{id}")
     private ResponseEntity<Object> editUser(@PathVariable("id") Long id, @RequestBody User user) {
         try {
-            return userService.editUser(id, user);
+            userService.editUser(id, user);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
@@ -78,6 +88,7 @@ public class UserRestController {
 
     @DeleteMapping("/{id}")
     private ResponseEntity<Object> deleteUser(@PathVariable("id") Long id) {
-        return userService.deleteUser(id);
+        userService.deleteUser(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

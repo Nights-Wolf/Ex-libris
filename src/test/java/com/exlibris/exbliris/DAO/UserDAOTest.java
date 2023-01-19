@@ -7,9 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,19 +32,15 @@ class UserDAOTest {
 
     @Test
     void addUser() {
-        ResponseEntity<Object> response = userDAO.addUser(user2);
-
-        HttpStatus responseStatus = (HttpStatus) response.getStatusCode();
-
-        Assertions.assertEquals(HttpStatus.CREATED, responseStatus);
+        userDAO.addUser(user);
+        Mockito.verify(userDAO).addUser(user);
     }
 
     @Test
     void getUser() {
-        ResponseEntity<Object> response = userDAO.getUser(user.getId());
-        UserResponse responseUser = (UserResponse) response.getBody();
+        UserResponse response = userDAO.getUser(user.getId());
 
-        Assertions.assertEquals(userResponse.getId(), responseUser.getId());
+        Assertions.assertEquals(userResponse.getId(), response.getId());
     }
 
     @Test
@@ -53,30 +48,24 @@ class UserDAOTest {
         List<User> users = new ArrayList<>();
         users.add(user);
 
-        ResponseEntity<Object> response = userDAO.getAllUsers();
-        List<User> responseList = (List<User>) response.getBody();
+        List<User> response = userDAO.getAllUsers();
 
-        Assertions.assertEquals(users, responseList);
+        Assertions.assertEquals(users, response);
     }
 
     @Test
     void editUser() {
         User editedUser = new User(1L, "NightsWolf", "123", "dawi@wp.pl", "Buba", "Całkowksi");
-        ResponseEntity<Object> response = userDAO.editUser(editedUser);
-        HttpStatus responseStatusCode = (HttpStatus) response.getStatusCode();
-
-        Assertions.assertEquals(HttpStatus.NO_CONTENT, responseStatusCode);
+        userDAO.editUser(editedUser);
+        Mockito.verify(userDAO).editUser(editedUser);
     }
 
     @Test
     void deleteUser() {
-        userDAO.addUser(user);
-
         userDAO.deleteUser(user.getId());
 
-        ResponseEntity<Object> response = userDAO.getUser(user.getId());
-        User responseUser = (User) response.getBody();
+        UserResponse response = userDAO.getUser(user.getId());
 
-        Assertions.assertEquals(null, responseUser);
+        Assertions.assertEquals(null, response);
     }
 }
