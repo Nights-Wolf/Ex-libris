@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ex-libris</groupId>
-	<artifactId>ex-bliris</artifactId>
+	<artifactId>ex-libris</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ex-bliris</name>
+	<name>ex-libris</name>
 	<description>Application for tracking the amount and type of books you read, will read or is currently reading.</description>
 	<properties>
 		<java.version>19</java.version>
@@ -50,6 +50,11 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>9.8.1</version>
 			</plugin>
 		</plugins>
 	</build>
