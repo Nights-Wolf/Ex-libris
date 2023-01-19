@@ -1,6 +1,5 @@
 package com.exlibris.exbliris.api;
 
-import com.exlibris.exbliris.DAO.UserDAO;
 import com.exlibris.exbliris.models.user.User;
 import com.exlibris.exbliris.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;

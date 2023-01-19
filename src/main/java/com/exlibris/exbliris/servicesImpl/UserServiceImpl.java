@@ -1,6 +1,5 @@
 package com.exlibris.exbliris.servicesImpl;
 
-import com.exlibris.exbliris.DAO.UserDAO;
 import com.exlibris.exbliris.models.user.User;
 import com.exlibris.exbliris.models.user.UserResponse;
 import com.exlibris.exbliris.services.UserService;
