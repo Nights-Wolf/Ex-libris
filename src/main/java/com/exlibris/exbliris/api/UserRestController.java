@@ -26,10 +26,7 @@ public class UserRestController {
     @PostMapping
     private ResponseEntity<Object> addUser(@RequestBody User user) {
         try {
-            User createdUser = userService.addUser(user);
-            if (createdUser == null) {
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
-            }
+            userService.addUser(user);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();

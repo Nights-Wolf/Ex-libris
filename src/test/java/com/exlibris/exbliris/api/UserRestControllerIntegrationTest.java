@@ -40,7 +40,6 @@ class UserRestControllerIntegrationTest {
 
     @Test
     void shouldCreateUser() throws Exception {
-        Mockito.when(userService.addUser(Mockito.any(User.class))).thenReturn(new UserDAO().addUser(Mockito.any(User.class)));
         mockMvc.perform(MockMvcRequestBuilders.post("/api/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user)))
@@ -88,7 +87,6 @@ class UserRestControllerIntegrationTest {
 
     @Test
     void shouldEditUser() throws Exception {
-        Mockito.when(userService.editUser(Mockito.eq(1L), Mockito.any(User.class))).thenReturn(userDAO.editUser(user));
         mockMvc.perform(MockMvcRequestBuilders.put("/api/user/1")
                 .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
@@ -99,7 +97,6 @@ class UserRestControllerIntegrationTest {
 
     @Test
     void shouldDeleteUser() throws Exception {
-        Mockito.when(userService.deleteUser(1L)).thenReturn(userDAO.deleteUser(1L));
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/1"))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 

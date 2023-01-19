@@ -8,11 +8,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,105 +34,57 @@ class UserServiceImplUnitTest {
 
     @Test
     void shouldAddUser() {
-        Mockito.when(userDAO.addUser(user)).thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
-        ResponseEntity<Object> response = userService.addUser(user);
-        HttpStatus status = (HttpStatus) response.getStatusCode();
-
-        Assertions.assertEquals(HttpStatus.CREATED, status);
-    }
-
-    @Test
-    void shouldCheckIfUserExists() {
-        Mockito.when(userDAO.getUser(user.getId())).thenReturn(new ResponseEntity<>(userResponse, HttpStatus.OK));
-
-        ResponseEntity<Object> response = userService.addUser(user);
-        HttpStatus responseStatus = (HttpStatus) response.getStatusCode();
-
-        Assertions.assertEquals(HttpStatus.CONFLICT, responseStatus);
+        userService.addUser(user);
+        Mockito.verify(userDAO).addUser(user);
     }
 
     @Test
     void shouldGetUser() {
-        Mockito.when(userDAO.getUser(user.getId())).thenReturn(new ResponseEntity<>(userResponse, HttpStatus.OK));
-        ResponseEntity<Object> response = userService.getUser(user.getId());
-        UserResponse responseUser = (UserResponse) response.getBody();
+        Mockito.when(userDAO.getUser(user.getId())).thenReturn(userResponse);
+        UserResponse response = userService.getUser(user.getId());
 
-        Assertions.assertEquals(userResponse, responseUser);
+        Assertions.assertEquals(userResponse, response);
     }
 
     @Test
-    void shouldThrowUserNotFound() {
-        Mockito.when(userDAO.getUser(user.getId())).thenReturn(null);
-
-        ResponseEntity<Object> response = userService.getUser(user.getId());
-        HttpStatus responseStatus = (HttpStatus) response.getStatusCode();
-
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, responseStatus);
+    void shouldThrowUserNotFound() throws IndexOutOfBoundsException {
+        Mockito.doThrow(new IndexOutOfBoundsException()).when(userDAO).getUser(user.getId());
+        userService.getUser(user.getId());
     }
 
     @Test
     void shouldGetAllUsers() {
-        List<UserResponse> userList = new ArrayList<>();
-        userList.add(userResponse);
+        List<User> userList = new ArrayList<>();
+        userList.add(user);
 
-        Mockito.when(userDAO.getAllUsers()).thenReturn(new ResponseEntity<>(userList, HttpStatus.OK));
-        ResponseEntity<Object> response = userService.getAllUsers();
-        List<User> responseUserList = (List<User>) response.getBody();
+        Mockito.when(userDAO.getAllUsers()).thenReturn(userList);
+        List<User> response = userService.getAllUsers();
 
-        Assertions.assertEquals(userList, responseUserList);
-    }
-
-    @Test
-    void shouldThrowAnyUserNotFound() {
-        Mockito.when(userDAO.getAllUsers()).thenReturn(null);
-
-        ResponseEntity<Object> response = userService.getAllUsers();
-        HttpStatus responseStatus = (HttpStatus) response.getStatusCode();
-
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, responseStatus);
+        Assertions.assertEquals(userList, response);
     }
 
     @Test
     void shouldEditUser() {
         User editedUser = new User(1L, "NightsWolf", "123", "dawi@wp.pl", "Dawid", "Całkowksi");
 
-        Mockito.when(userDAO.getUser(user.getId())).thenReturn(new ResponseEntity<>(user, HttpStatus.OK));
-        Mockito.when(userDAO.editUser(editedUser)).thenReturn(new ResponseEntity<>(editedUser, HttpStatus.OK));
-        ResponseEntity<Object> response = userService.editUser(user.getId(), editedUser);
-        User responseUser = (User) response.getBody();
-
-        Assertions.assertEquals(editedUser, responseUser);
+        userService.editUser(user.getId(), editedUser);
+        Mockito.verify(userDAO).editUser(editedUser);
     }
 
     @Test
     void shouldThrowUserToEditNotFound() {
         User editedUser = new User(1L, "NightsWolf", "123", "dawi@wp.pl", "Dawid", "Całkowksi");
 
-        Mockito.when(userDAO.getUser(user.getId())).thenReturn(null);
+        BDDMockito.given(userService.getUser(user.getId())).willThrow(IndexOutOfBoundsException.class);
+        Mockito.when(userDAO.getUser(user.getId())).thenThrow(IndexOutOfBoundsException.class);
 
-        ResponseEntity<Object> response = userService.editUser(user.getId(), editedUser);
-        HttpStatus responseStatus = (HttpStatus) response.getStatusCode();
-
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, responseStatus);
+        userService.editUser(user.getId(), editedUser);
+        Mockito.verify(userDAO).editUser(editedUser);
     }
 
     @Test
     void deleteUser() {
-        Mockito.when(userDAO.deleteUser(user.getId())).thenReturn(new ResponseEntity<>(HttpStatus.NO_CONTENT));
-
-        ResponseEntity<Object> response = userService.deleteUser(user.getId());
-        HttpStatus responseStatus = (HttpStatus) response.getStatusCode();
-
-        Assertions.assertEquals(HttpStatus.NO_CONTENT, responseStatus);
-    }
-
-    @Test
-    void shouldThrowUserToDeleteNotFound() {
-        Mockito.when(userDAO.deleteUser(user.getId())).thenReturn(null);
-
-        ResponseEntity<Object> response = userService.deleteUser(user.getId());
-        HttpStatus responseStatus = (HttpStatus) response.getStatusCode();
-
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, responseStatus);
+        userService.deleteUser(user.getId());
+        Mockito.verify(userDAO).deleteUser(user.getId());
     }
 }
