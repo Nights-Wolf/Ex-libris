@@ -1,6 +1,8 @@
 package com.exlibris.exbliris.api;
 
+import com.exlibris.exbliris.database.UserRepository;
 import com.exlibris.exbliris.models.user.User;
+import com.exlibris.exbliris.models.user.UserResponse;
 import com.exlibris.exbliris.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,14 +29,14 @@ class UserRestControllerIntegrationTest {
     private UserService userService;
 
     @MockBean
-    private UserDAO userDAO;
+    private UserRepository userRepository;
 
     private User user = new User(1L, "NightsWolf", "123", "dawinavi@wp.pl", "Dawid", "Całkowksi");
+    private UserResponse userResponse = new UserResponse(1L, "NightsWolf", "dawi@wp.pl", "Dawid", "Całkowksi");
 
     @BeforeEach
     void setUp() {
-        userDAO = new UserDAO();
-        userDAO.addUser(user);
+        userRepository.save(user);
     }
 
     @Test
@@ -56,7 +58,7 @@ class UserRestControllerIntegrationTest {
 
     @Test
     void shouldGetUser() throws Exception {
-        Mockito.when(userService.getUser(1L)).thenReturn(userDAO.getUser(1L));
+        Mockito.when(userService.getUser(1L)).thenReturn(userResponse);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -66,7 +68,7 @@ class UserRestControllerIntegrationTest {
 
     @Test
     void shouldThrowUserNotFound() throws Exception {
-        Mockito.when(userService.getUser(2L)).thenReturn(userDAO.getUser(2L));
+        Mockito.when(userService.getUser(2L)).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/2")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -76,7 +78,7 @@ class UserRestControllerIntegrationTest {
 
     @Test
     void shouldReturnAllUsers() throws Exception {
-        Mockito.when(userService.getAllUsers()).thenReturn(userDAO.getAllUsers());
+        Mockito.when(userService.getAllUsers()).thenReturn(userRepository.findAll());
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/all")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
