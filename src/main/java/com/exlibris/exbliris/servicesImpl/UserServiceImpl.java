@@ -1,55 +1,67 @@
 package com.exlibris.exbliris.servicesImpl;
 
-import com.exlibris.exbliris.DAO.UserDAO;
+import com.exlibris.exbliris.database.UserRepository;
 import com.exlibris.exbliris.models.user.User;
 import com.exlibris.exbliris.models.user.UserResponse;
 import com.exlibris.exbliris.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserDAO userDAO;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public void addUser(User user) {
-          userDAO.addUser(user);
+          userRepository.save(user);
     }
 
     @Override
     public UserResponse getUser(Long id) {
-            return userDAO.getUser(id);
+            Optional<User> user = userRepository.findById(id);
+
+            if (user.isEmpty()) {
+                throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+            }
+
+            UserResponse response = new UserResponse(user.get().getId(), user.get().getUsername(), user.get().getEmail(),
+                    user.get().getName(), user.get().getSurname());
+
+            return response;
     }
 
     @Override
     public List<User> getAllUsers() {
-            return userDAO.getAllUsers();
+        return userRepository.findAll();
     }
 
     @Override
     public void editUser(Long id, User user) {
-            UserResponse getUser = userDAO.getUser(id);
+            Optional<User> userToEdit = userRepository.findById(id);
 
-            UserResponse userToEdit = getUser;
+            if (userToEdit.isEmpty()) {
+                throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+            }
 
-            userToEdit.setUsername(user.getUsername());
-            userToEdit.setEmail(user.getEmail());
-            userToEdit.setName(user.getName());
-            userToEdit.setSurname(user.getSurname());
+            userToEdit.stream()
+                            .map(editingUser -> user);
 
-            userDAO.addUser(user);
+            userRepository.save(userToEdit.get());
     }
 
     @Override
     public void deleteUser(Long id) {
-            userDAO.deleteUser(id);
+            userRepository.deleteById(id);
     }
 }
