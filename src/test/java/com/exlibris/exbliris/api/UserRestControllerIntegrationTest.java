@@ -6,6 +6,7 @@ import com.exlibris.exbliris.models.user.UserResponse;
 import com.exlibris.exbliris.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @WebMvcTest(UserRestController.class)
 class UserRestControllerIntegrationTest {
@@ -78,7 +83,9 @@ class UserRestControllerIntegrationTest {
 
     @Test
     void shouldReturnAllUsers() throws Exception {
-        Mockito.when(userService.getAllUsers()).thenReturn(userRepository.findAll());
+        List<User> userList = new ArrayList<>();
+        userList.add(user);
+        Mockito.when(userService.getAllUsers()).thenReturn(userList);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/all")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
