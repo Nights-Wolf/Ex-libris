@@ -1,0 +1,5 @@
+app:
+  datasource:
+    jdbc-url: jdbc:postgresql://localhost:5432/ex-libris_db
+    username: ex-libris_admin
+    password: pass123

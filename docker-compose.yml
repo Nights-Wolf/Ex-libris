@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  database:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ex-libris_admin
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: ex-libris_db
+
+    ports:
+      - "5432:5432"
