@@ -26,14 +26,14 @@ public class Library {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User userId;
     private String token;
-    private Date date;
+    private Date created;
 
     public Library() {super();}
-    public Library(Long id, String name, User userId, String token, Date date) {
+    public Library(Long id, String name, User userId, String token, Date created) {
         this.id = id;
         this.name = name;
         this.userId = userId;
         this.token = token;
-        this.date = date;
+        this.created = created;
     }
 }

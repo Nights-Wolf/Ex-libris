@@ -6,3 +6,11 @@ CREATE TABLE user (
     name VARCHAR(20),
     surname VARCHAR(20)
 );
+
+CREATE TABLE library (
+    id SERIAL PRIMARY KEY NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    user_id INTEGER REFERENCES user(id),
+    token VARCHAR(100) NOT NULL,
+    created DATE NOT NULL DEFAULT CURRENT_DATE
+);
