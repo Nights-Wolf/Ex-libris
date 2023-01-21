@@ -6,11 +6,9 @@ import com.exlibris.exbliris.models.user.UserResponse;
 import com.exlibris.exbliris.services.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -82,7 +80,7 @@ class UserServiceImplUnitTest {
         Mockito.verify(userRepository).save(userArgumentCaptor.capture());
         User response = userArgumentCaptor.getValue();
 
-        Assertions.assertEquals(user, response);
+        Assertions.assertEquals(editedUser, response);
     }
 
     @Test
