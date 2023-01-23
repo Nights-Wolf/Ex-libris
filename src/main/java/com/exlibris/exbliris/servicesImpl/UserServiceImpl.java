@@ -48,14 +48,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editUser(Long id, User user) {
-            Optional<User> userToEdit = userRepository.findById(id);
+            Optional<User> userToEdit = userRepository.findById(id).map(editingUser -> user);
 
             if (userToEdit.isEmpty()) {
                 throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
             }
-
-            userToEdit.stream()
-                            .map(editingUser -> user);
 
             userRepository.save(userToEdit.get());
     }
