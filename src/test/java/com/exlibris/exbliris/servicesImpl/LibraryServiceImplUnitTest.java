@@ -1,8 +1,10 @@
 package com.exlibris.exbliris.servicesImpl;
 
 import com.exlibris.exbliris.database.LibraryRepository;
+import com.exlibris.exbliris.database.UserRepository;
 import com.exlibris.exbliris.models.Library;
 import com.exlibris.exbliris.models.user.User;
+import com.exlibris.exbliris.models.user.UserResponse;
 import com.exlibris.exbliris.services.LibraryService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,12 +30,15 @@ class LibraryServiceImplUnitTest {
     @Mock
     private LibraryRepository libraryRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
     private User user = new User(1L, "NightsWolf", "123", "dawi@wp.pl", "Dawid", "Całkowksi");
     private Library library = new Library(1L, "Bokshelf", user, "kaowpdkawd", new Date());
 
     @BeforeEach
     void setUp() {
-        libraryService = new LibraryServiceImpl(libraryRepository);
+        libraryService = new LibraryServiceImpl(libraryRepository, userRepository);
     }
 
     @Test
@@ -76,6 +81,19 @@ class LibraryServiceImplUnitTest {
         List<Library> response = libraryService.getAllLibraries();
 
         Assertions.assertEquals(libraryList, response);
+    }
+
+    @Test
+    void shouldGetLibrariesByUser() {
+        List<Library> libraries = new ArrayList<>();
+        libraries.add(library);
+
+        Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.ofNullable(user));
+        Mockito.when(libraryRepository.getByUserId(user)).thenReturn(libraries);
+
+        List<Library> response = libraryService.getByUser(user.getId());
+
+        Assertions.assertEquals(libraries, response);
     }
 
     @Test

@@ -1,7 +1,10 @@
 package com.exlibris.exbliris.servicesImpl;
 
 import com.exlibris.exbliris.database.LibraryRepository;
+import com.exlibris.exbliris.database.UserRepository;
 import com.exlibris.exbliris.models.Library;
+import com.exlibris.exbliris.models.user.User;
+import com.exlibris.exbliris.models.user.UserResponse;
 import com.exlibris.exbliris.services.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,10 +18,12 @@ import java.util.Optional;
 public class LibraryServiceImpl implements LibraryService {
 
     private final LibraryRepository libraryRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public LibraryServiceImpl(LibraryRepository libraryRepository) {
+    public LibraryServiceImpl(LibraryRepository libraryRepository, UserRepository userRepository) {
         this.libraryRepository = libraryRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -40,6 +45,13 @@ public class LibraryServiceImpl implements LibraryService {
     @Override
     public List<Library> getAllLibraries() {
         return libraryRepository.findAll();
+    }
+
+    @Override
+    public List<Library> getByUser(Long id) {
+        Optional<User> user = userRepository.findById(id);
+
+        return libraryRepository.getByUserId(user.get());
     }
 
     @Override
