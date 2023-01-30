@@ -23,7 +23,7 @@ public class LibraryRestController {
     }
 
     @PostMapping
-    private ResponseEntity<Object> createLibrary(Library library) {
+    private ResponseEntity<Object> createLibrary(@RequestBody Library library) {
         try {
             libraryService.createLibrary(library);
 
@@ -38,7 +38,7 @@ public class LibraryRestController {
         }
     }
 
-    @GetMapping("/library")
+    @GetMapping("/{id}")
     private ResponseEntity<Object> getLibrary(@PathVariable("id") Long id) {
         try {
             Library library = libraryService.getLibrary(id);

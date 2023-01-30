@@ -3,8 +3,7 @@ package com.exlibris.exbliris.servicesImpl;
 import com.exlibris.exbliris.database.LibraryRepository;
 import com.exlibris.exbliris.database.UserRepository;
 import com.exlibris.exbliris.models.Library;
-import com.exlibris.exbliris.models.user.User;
-import com.exlibris.exbliris.models.user.UserResponse;
+import com.exlibris.exbliris.models.user.Users;
 import com.exlibris.exbliris.services.LibraryService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,8 +32,8 @@ class LibraryServiceImplUnitTest {
     @Mock
     private UserRepository userRepository;
 
-    private User user = new User(1L, "NightsWolf", "123", "dawi@wp.pl", "Dawid", "Całkowksi");
-    private Library library = new Library(1L, "Bokshelf", user, "kaowpdkawd", new Date());
+    private Users users = new Users(1L, "NightsWolf", "123", "dawi@wp.pl", "Dawid", "Całkowksi");
+    private Library library = new Library(1L, "Bokshelf", users, "kaowpdkawd", new Date());
 
     @BeforeEach
     void setUp() {
@@ -88,17 +87,17 @@ class LibraryServiceImplUnitTest {
         List<Library> libraries = new ArrayList<>();
         libraries.add(library);
 
-        Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.ofNullable(user));
-        Mockito.when(libraryRepository.getByUserId(user)).thenReturn(libraries);
+        Mockito.when(userRepository.findById(users.getId())).thenReturn(Optional.ofNullable(users));
+        Mockito.when(libraryRepository.getByUsersId(users)).thenReturn(libraries);
 
-        List<Library> response = libraryService.getByUser(user.getId());
+        List<Library> response = libraryService.getByUser(users.getId());
 
         Assertions.assertEquals(libraries, response);
     }
 
     @Test
     void shouldEditLibrary() {
-        Library editedLibrary = new Library(1L, "Bookshelf", user, "kaowpdkawd", new Date());
+        Library editedLibrary = new Library(1L, "Bookshelf", users, "kaowpdkawd", new Date());
 
         Mockito.when(libraryRepository.findById(library.getId())).thenReturn(Optional.ofNullable(library));
 
@@ -113,7 +112,7 @@ class LibraryServiceImplUnitTest {
 
     @Test
     void shouldThrowLibraryToEditNotFound() {
-        Library editedLibrary = new Library(1L, "Bookshelf", user, "kaowpdkawd", new Date());
+        Library editedLibrary = new Library(1L, "Bookshelf", users, "kaowpdkawd", new Date());
 
         Mockito.when(libraryRepository.findById(library.getId())).thenThrow(HttpClientErrorException.class);
 

@@ -1,6 +1,6 @@
 package com.exlibris.exbliris.api;
 
-import com.exlibris.exbliris.models.user.User;
+import com.exlibris.exbliris.models.user.Users;
 import com.exlibris.exbliris.models.user.UserResponse;
 import com.exlibris.exbliris.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class UserRestController {
     }
 
     @PostMapping
-    private ResponseEntity<Object> addUser(@RequestBody User user) {
+    private ResponseEntity<Object> addUser(@RequestBody Users user) {
         try {
             userService.addUser(user);
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -59,8 +59,8 @@ public class UserRestController {
     @GetMapping("/all")
     private ResponseEntity<Object> getAllUsers() {
         try {
-            List<User> userList = userService.getAllUsers();
-            return new ResponseEntity<>(userList, HttpStatus.OK);
+            List<Users> usersList = userService.getAllUsers();
+            return new ResponseEntity<>(usersList, HttpStatus.OK);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
@@ -72,9 +72,9 @@ public class UserRestController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<Object> editUser(@PathVariable("id") Long id, @RequestBody User user) {
+    private ResponseEntity<Object> editUser(@PathVariable("id") Long id, @RequestBody Users users) {
         try {
-            userService.editUser(id, user);
+            userService.editUser(id, users);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();

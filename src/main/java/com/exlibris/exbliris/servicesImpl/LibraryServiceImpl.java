@@ -3,8 +3,7 @@ package com.exlibris.exbliris.servicesImpl;
 import com.exlibris.exbliris.database.LibraryRepository;
 import com.exlibris.exbliris.database.UserRepository;
 import com.exlibris.exbliris.models.Library;
-import com.exlibris.exbliris.models.user.User;
-import com.exlibris.exbliris.models.user.UserResponse;
+import com.exlibris.exbliris.models.user.Users;
 import com.exlibris.exbliris.services.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,9 +48,9 @@ public class LibraryServiceImpl implements LibraryService {
 
     @Override
     public List<Library> getByUser(Long id) {
-        Optional<User> user = userRepository.findById(id);
+        Optional<Users> user = userRepository.findById(id);
 
-        return libraryRepository.getByUserId(user.get());
+        return libraryRepository.getByUsersId(user.get());
     }
 
     @Override

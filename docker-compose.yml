@@ -5,9 +5,9 @@ services:
     image: postgres:alpine
     restart: always
     environment:
-      POSTGRES_USER: ex-libris_admin
+      POSTGRES_USER: ex_libris_admin
       POSTGRES_PASSWORD: pass123
-      POSTGRES_DB: ex-libris_db
+      POSTGRES_DB: ex_libris_db
 
     ports:
       - "5432:5432"
