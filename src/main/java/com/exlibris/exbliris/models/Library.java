@@ -1,6 +1,6 @@
 package com.exlibris.exbliris.models;
 
-import com.exlibris.exbliris.models.user.User;
+import com.exlibris.exbliris.models.user.Users;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -13,7 +13,7 @@ import java.util.Date;
 @Setter
 @Getter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id", scope = User.class)
+        property = "id", scope = Library.class)
 public class Library {
 
     @Id
@@ -22,17 +22,17 @@ public class Library {
 
     private String name;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User userId;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "users_id", referencedColumnName = "id")
+    private Users usersId;
     private String token;
     private Date created;
 
     public Library() {super();}
-    public Library(Long id, String name, User userId, String token, Date created) {
+    public Library(Long id, String name, Users usersId, String token, Date created) {
         this.id = id;
         this.name = name;
-        this.userId = userId;
+        this.usersId = usersId;
         this.token = token;
         this.created = created;
     }

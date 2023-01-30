@@ -1,4 +1,4 @@
-CREATE TABLE user (
+CREATE TABLE users (
     id SERIAL PRIMARY KEY NOT NULL,
     username VARCHAR(20) NOT NULL,
     password VARCHAR(20) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE user (
 CREATE TABLE library (
     id SERIAL PRIMARY KEY NOT NULL,
     name VARCHAR(50) NOT NULL,
-    user_id INTEGER REFERENCES user(id),
+    users_id INTEGER REFERENCES users(id) NOT NULL,
     token VARCHAR(100) NOT NULL,
     created DATE NOT NULL DEFAULT CURRENT_DATE
 );

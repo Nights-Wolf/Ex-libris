@@ -1,7 +1,7 @@
 package com.exlibris.exbliris.api;
 
 import com.exlibris.exbliris.database.UserRepository;
-import com.exlibris.exbliris.models.user.User;
+import com.exlibris.exbliris.models.user.Users;
 import com.exlibris.exbliris.models.user.UserResponse;
 import com.exlibris.exbliris.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,13 +15,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @WebMvcTest(UserRestController.class)
-class UserRestControllerIntegrationTest {
+class UsersRestControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -35,22 +34,22 @@ class UserRestControllerIntegrationTest {
     @MockBean
     private UserRepository userRepository;
 
-    private User user = new User(1L, "NightsWolf", "123", "dawinavi@wp.pl", "Dawid", "Całkowksi");
+    private Users users = new Users(1L, "NightsWolf", "123", "dawinavi@wp.pl", "Dawid", "Całkowksi");
     private UserResponse userResponse = new UserResponse(1L, "NightsWolf", "dawi@wp.pl", "Dawid", "Całkowksi");
 
     @BeforeEach
     void setUp() {
-        userRepository.save(user);
+        userRepository.save(users);
     }
 
     @Test
     void shouldCreateUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/user")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(users)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
-        Mockito.verify(userService).addUser(Mockito.any(User.class));
+        Mockito.verify(userService).addUser(Mockito.any(Users.class));
     }
 
     @Test
@@ -82,9 +81,9 @@ class UserRestControllerIntegrationTest {
 
     @Test
     void shouldReturnAllUsers() throws Exception {
-        List<User> userList = new ArrayList<>();
-        userList.add(user);
-        Mockito.when(userService.getAllUsers()).thenReturn(userList);
+        List<Users> usersList = new ArrayList<>();
+        usersList.add(users);
+        Mockito.when(userService.getAllUsers()).thenReturn(usersList);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/all")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -96,10 +95,10 @@ class UserRestControllerIntegrationTest {
     void shouldEditUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/user/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(user)))
+                        .content(objectMapper.writeValueAsString(users)))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
-        Mockito.verify(userService).editUser(Mockito.eq(1L), Mockito.any(User.class));
+        Mockito.verify(userService).editUser(Mockito.eq(1L), Mockito.any(Users.class));
     }
 
     @Test
