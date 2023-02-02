@@ -24,6 +24,6 @@ public class Book {
     private String publishingHouse;
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "library_id", referencedColumnName = "id")
-    private Library library;
+    private List<Library> library;
     private Date created;
 }
