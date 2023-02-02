@@ -22,7 +22,7 @@ public class Library {
 
     private String name;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "users_id", referencedColumnName = "id")
     private Users usersId;
     private String token;
