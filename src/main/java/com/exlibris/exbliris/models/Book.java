@@ -26,4 +26,12 @@ public class Book {
     @JoinColumn(name = "library_id", referencedColumnName = "id")
     private List<Library> library;
     private Date created;
+
+    public Book(Long id, List<String> author, String publishingHouse, List<Library> library, Date created) {
+        this.id = id;
+        this.author = author;
+        this.publishingHouse = publishingHouse;
+        this.library = library;
+        this.created = created;
+    }
 }
