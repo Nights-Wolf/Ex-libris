@@ -23,7 +23,7 @@ public class BookRestController {
     }
 
     @PostMapping
-    private ResponseEntity<Object> addBook(Book book) {
+    private ResponseEntity<Object> addBook(@RequestBody Book book) {
         try {
             bookService.addBook(book);
 
@@ -42,6 +42,10 @@ public class BookRestController {
     private ResponseEntity<Object> getBook(@PathVariable("id") Long id) {
         try {
             Book book = bookService.getBook(id);
+
+            if (book == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
             return new ResponseEntity<>(book, HttpStatus.OK);
         } catch (HttpClientErrorException e) {
