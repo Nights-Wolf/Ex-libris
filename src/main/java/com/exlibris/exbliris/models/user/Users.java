@@ -13,8 +13,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-    property = "id", scope = User.class)
-public class User {
+    property = "id", scope = Users.class)
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +26,8 @@ public class User {
     private String name;
     private String surname;
 
-    public User() {super();}
-    public User(Long id, String username, String password, String email, String name, String surname) {
+    public Users() {super();}
+    public Users(Long id, String username, String password, String email, String name, String surname) {
         this.id = id;
         this.username = username;
         this.password = password;

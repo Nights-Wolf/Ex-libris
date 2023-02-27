@@ -1,8 +1,7 @@
 package com.exlibris.exbliris.api;
 
-import com.exlibris.exbliris.models.user.Users;
-import com.exlibris.exbliris.models.user.UserResponse;
-import com.exlibris.exbliris.services.UserService;
+import com.exlibris.exbliris.models.Library;
+import com.exlibris.exbliris.services.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +12,21 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/user")
-public class UserRestController {
+@RequestMapping("api/library")
+public class LibraryRestController {
+
+    private final LibraryService libraryService;
 
     @Autowired
-    private final UserService userService;
-
-    public UserRestController(UserService userService) {
-        this.userService = userService;
+    public LibraryRestController(LibraryService libraryService) {
+        this.libraryService = libraryService;
     }
 
     @PostMapping
-    private ResponseEntity<Object> addUser(@RequestBody Users user) {
+    private ResponseEntity<Object> createLibrary(@RequestBody Library library) {
         try {
-            userService.addUser(user);
+            libraryService.createLibrary(library);
+
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
@@ -39,13 +39,13 @@ public class UserRestController {
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<Object> getUser(@PathVariable("id") Long id) {
+    private ResponseEntity<Object> getLibrary(@PathVariable("id") Long id) {
         try {
-            UserResponse userResponse = userService.getUser(id);
-            if (userResponse == null) {
+            Library library = libraryService.getLibrary(id);
+            if (library == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(userResponse, HttpStatus.OK);
+            return new ResponseEntity<>(library, HttpStatus.OK);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
@@ -57,10 +57,27 @@ public class UserRestController {
     }
 
     @GetMapping("/all")
-    private ResponseEntity<Object> getAllUsers() {
+    private ResponseEntity<Object> getAllLibraries() {
         try {
-            List<Users> usersList = userService.getAllUsers();
-            return new ResponseEntity<>(usersList, HttpStatus.OK);
+            List<Library> libraries = libraryService.getAllLibraries();
+
+            return new ResponseEntity<>(libraries, HttpStatus.OK);
+        } catch (HttpClientErrorException e) {
+            HashMap error = new HashMap<>();
+            error.put("Message", e.getMessage());
+            error.put("Status", e.getStatusCode());
+            error.put("Cause", e.getCause());
+
+            return new ResponseEntity<>(error, e.getStatusCode());
+        }
+    }
+
+    @GetMapping("/getByUser/{id}")
+    private ResponseEntity<Object> getByUser(@PathVariable("id") Long id) {
+        try {
+            List<Library> libraries = libraryService.getByUser(id);
+
+            return new ResponseEntity<>(libraries, HttpStatus.OK);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
@@ -72,9 +89,10 @@ public class UserRestController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<Object> editUser(@PathVariable("id") Long id, @RequestBody Users users) {
+    private ResponseEntity<Object> editLibrary(@PathVariable("id") Long id, @RequestBody Library library) {
         try {
-            userService.editUser(id, users);
+            libraryService.editLibrary(id, library);
+
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
@@ -87,9 +105,10 @@ public class UserRestController {
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<Object> deleteUser(@PathVariable("id") Long id) {
+    private ResponseEntity<Object> deleteLibrary(@PathVariable("id") Long id) {
         try {
-            userService.deleteUser(id);
+            libraryService.deleteLibrary(id);
+
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();

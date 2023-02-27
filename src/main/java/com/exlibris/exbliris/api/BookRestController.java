@@ -1,8 +1,7 @@
 package com.exlibris.exbliris.api;
 
-import com.exlibris.exbliris.models.user.Users;
-import com.exlibris.exbliris.models.user.UserResponse;
-import com.exlibris.exbliris.services.UserService;
+import com.exlibris.exbliris.models.Book;
+import com.exlibris.exbliris.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +12,21 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/user")
-public class UserRestController {
+@RequestMapping("api/book")
+public class BookRestController {
+
+    private final BookService bookService;
 
     @Autowired
-    private final UserService userService;
-
-    public UserRestController(UserService userService) {
-        this.userService = userService;
+    public BookRestController(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @PostMapping
-    private ResponseEntity<Object> addUser(@RequestBody Users user) {
+    private ResponseEntity<Object> addBook(@RequestBody Book book) {
         try {
-            userService.addUser(user);
+            bookService.addBook(book);
+
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
@@ -39,13 +39,15 @@ public class UserRestController {
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<Object> getUser(@PathVariable("id") Long id) {
+    private ResponseEntity<Object> getBook(@PathVariable("id") Long id) {
         try {
-            UserResponse userResponse = userService.getUser(id);
-            if (userResponse == null) {
+            Book book = bookService.getBook(id);
+
+            if (book == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(userResponse, HttpStatus.OK);
+
+            return new ResponseEntity<>(book, HttpStatus.OK);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
@@ -57,10 +59,11 @@ public class UserRestController {
     }
 
     @GetMapping("/all")
-    private ResponseEntity<Object> getAllUsers() {
+    private ResponseEntity<Object> getAllBooks() {
         try {
-            List<Users> usersList = userService.getAllUsers();
-            return new ResponseEntity<>(usersList, HttpStatus.OK);
+            List<Book> books = bookService.getAllBooks();
+
+            return new ResponseEntity<>(books, HttpStatus.OK);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
             error.put("Message", e.getMessage());
@@ -72,9 +75,10 @@ public class UserRestController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<Object> editUser(@PathVariable("id") Long id, @RequestBody Users users) {
+    private ResponseEntity<Object> editBook(@PathVariable("id") Long id, @RequestBody Book book) {
         try {
-            userService.editUser(id, users);
+            bookService.editBook(id, book);
+
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();
@@ -87,9 +91,10 @@ public class UserRestController {
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<Object> deleteUser(@PathVariable("id") Long id) {
+    private ResponseEntity<Object> deleteBook(@PathVariable("id") Long id) {
         try {
-            userService.deleteUser(id);
+            bookService.deleteBook(id);
+
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (HttpClientErrorException e) {
             HashMap error = new HashMap<>();

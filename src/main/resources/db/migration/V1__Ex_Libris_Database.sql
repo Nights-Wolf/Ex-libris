@@ -1,8 +1,24 @@
-CREATE TABLE user (
+CREATE TABLE users (
     id SERIAL PRIMARY KEY NOT NULL,
     username VARCHAR(20) NOT NULL,
     password VARCHAR(20) NOT NULL,
     email VARCHAR(30) NOT NULL,
     name VARCHAR(20),
     surname VARCHAR(20)
+);
+
+CREATE TABLE library (
+    id SERIAL PRIMARY KEY NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    users_id INTEGER REFERENCES users(id) NOT NULL,
+    token VARCHAR(100) NOT NULL,
+    created DATE NOT NULL DEFAULT CURRENT_DATE
+);
+
+CREATE TABLE book (
+    id SERIAL PRIMARY KEY NOT NULL,
+    author VARCHAR(50) NOT NULL,
+    publishing_house VARCHAR(100) NOT NULL,
+    library INTEGER REFERENCES library(id),
+    created DATE NOT NULL DEFAULT CURRENT_DATE
 );

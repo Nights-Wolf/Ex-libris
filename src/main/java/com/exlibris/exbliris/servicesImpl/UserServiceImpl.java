@@ -1,7 +1,7 @@
 package com.exlibris.exbliris.servicesImpl;
 
 import com.exlibris.exbliris.database.UserRepository;
-import com.exlibris.exbliris.models.user.User;
+import com.exlibris.exbliris.models.user.Users;
 import com.exlibris.exbliris.models.user.UserResponse;
 import com.exlibris.exbliris.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +23,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUser(User user) {
-          userRepository.save(user);
+    public void addUser(Users users) {
+          userRepository.save(users);
     }
 
     @Override
     public UserResponse getUser(Long id) {
-            Optional<User> user = userRepository.findById(id);
+            Optional<Users> user = userRepository.findById(id);
 
             if (user.isEmpty()) {
                 throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
@@ -42,20 +42,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<Users> getAllUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public void editUser(Long id, User user) {
-            Optional<User> userToEdit = userRepository.findById(id);
+    public void editUser(Long id, Users users) {
+            Optional<Users> userToEdit = userRepository.findById(id).map(editingUser -> users);
 
             if (userToEdit.isEmpty()) {
                 throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
             }
-
-            userToEdit.stream()
-                            .map(editingUser -> user);
 
             userRepository.save(userToEdit.get());
     }
