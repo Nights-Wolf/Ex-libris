@@ -25,6 +25,8 @@ public class Users {
     private String email;
     private String name;
     private String surname;
+    private String role;
+    private boolean enabled;
 
     public Users() {super();}
     public Users(Long id, String username, String password, String email, String name, String surname) {
