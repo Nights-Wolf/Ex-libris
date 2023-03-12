@@ -1,10 +1,12 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY NOT NULL,
     username VARCHAR(20) NOT NULL,
-    password VARCHAR(20) NOT NULL,
+    password VARCHAR(100) NOT NULL,
     email VARCHAR(30) NOT NULL,
     name VARCHAR(20),
-    surname VARCHAR(20)
+    surname VARCHAR(20),
+    role VARCHAR(5) NOT NULL,
+    enabled BOOLEAN NOT NULL
 );
 
 CREATE TABLE library (

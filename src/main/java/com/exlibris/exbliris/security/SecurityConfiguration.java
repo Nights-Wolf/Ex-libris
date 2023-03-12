@@ -4,7 +4,10 @@ import com.exlibris.exbliris.database.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,22 +28,25 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    public AuthenticationManager authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(new MyUserDetailsService(userRepository));
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(authenticationProvider);
+    }
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/login").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
                                 .anyRequest()
                                 .authenticated())
-                .httpBasic();
+                .httpBasic()
+                .and()
+                .logout();
         return http.build();
-    }
-
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(new MyUserDetailsService(userRepository));
-        authenticationProvider.setPasswordEncoder(passwordEncoder);
-        return authenticationProvider();
     }
 }
